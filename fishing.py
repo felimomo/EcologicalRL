@@ -6,8 +6,10 @@ import dynamics as dyn
 
 class harvested_system(gym.Env):
   def __init__(self, config={}):
+    self.parameters = {}
+    
     # logistic growth
-    self.parameters['r'] = config.get('r', 1) 
+    self.parameters['r'] = config.get('r', 0.4) 
     self.parameters['k'] = config.get('k', 1) 
 
     # predation by constant predator pop
@@ -16,7 +18,7 @@ class harvested_system(gym.Env):
     self.parameters['c'] = config.get('c', 0.3) 
 
     # randomness
-    self.parameters['sigma'] = config.get('sigma', 0.25)
+    self.parameters['sigma'] = config.get('sigma', 1.0)
 
     # initialization
     self.init_pop = np.array([0.5], dtype=np.float32)
@@ -57,8 +59,8 @@ class harvested_system(gym.Env):
     harvest_rate = self.compute_harvest(action)
     harvested_pop = harvest_rate * self.pop
     #
-    self.pop -= harvested_pop
-    self.pop = dyn.dynamics(pop=self.pop, params=self.parameters)
+    self.pop -= harvested_pop # harvest
+    self.pop = dyn.dynamics(pop=self.pop, params=self.parameters) # recruit
     self.t += 1
     #
     reward = harvested_pop # could consider other rewards here
@@ -66,6 +68,8 @@ class harvested_system(gym.Env):
     truncated = False # not super relevant
     if self.t > self.max_t:
       terminated = True
+    else:
+      terminated = False
     #
     info = {}
     return obs, reward, terminated, truncated, info
