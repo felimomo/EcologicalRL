@@ -4,7 +4,7 @@ from gymnasium import spaces
 
 import dynamics as dyn
 
-class harvested_system(gym.Env):
+class FishingEnv(gym.Env):
   def __init__(self, config={}):
     self.parameters = {}
     
