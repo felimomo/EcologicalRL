@@ -63,7 +63,7 @@ class FishingEnv(gym.Env):
     self.pop = dyn.dynamics(pop=self.pop, params=self.parameters) # recruit
     self.t += 1
     #
-    reward = harvested_pop # could consider other rewards here
+    reward = harvested_pop[0] # could consider other rewards here
     obs = self.observe()
     truncated = False # not super relevant
     if self.t > self.max_t:
